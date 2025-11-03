@@ -1,0 +1,10 @@
+import { Module } from '@nestjs/common';
+import { ConsultaController } from './consulta.controller';
+import { ConsultaService } from './consulta.service';
+
+@Module({
+  imports: [],
+  controllers: [ConsultaController],
+  providers: [ConsultaService],
+})
+export class ConsultaModule {}
