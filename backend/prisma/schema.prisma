@@ -13,3 +13,34 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL_UNPOOLED")
 }
+
+model Paciente {
+  id Int @id @default(autoincrement())
+  nomeCompleto String
+  dataNascimento DateTime
+  telefone String @unique
+  email String @unique
+  cpf String @unique
+  consultas Consulta[]
+  evolucoes Evolucao[]
+}
+
+model Consulta {
+  id Int @id @default(autoincrement())
+  pacienteId  Int
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+  dataEvento DateTime @default(now())
+  nomeEvento String
+  horarioInicio DateTime
+  horarioFim DateTime
+}
+
+model Evolucao {
+  id Int @id @default(autoincrement())
+  pacienteId  Int
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+  titulo String
+  data DateTime @default(now())
+  horaInicio DateTime
+  descricao String
+}
