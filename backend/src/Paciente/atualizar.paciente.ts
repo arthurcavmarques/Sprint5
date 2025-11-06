@@ -1,6 +1,6 @@
 import { IsOptional,IsNotEmpty,MinLength, IsString, IsEmail, Max, Min, IsNumber } from 'class-validator';
 
-export class UpdatePatientDto {
+export class AtualizarPaciente {
 
   @IsOptional()
   @IsString()

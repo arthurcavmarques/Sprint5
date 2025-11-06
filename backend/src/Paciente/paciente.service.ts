@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../Prisma/prisma.service';
 import { Paciente } from './paciente';
-import { UpdatePatientDto } from './atualizar.paciente';
+import { AtualizarPaciente } from './atualizar.paciente';
 
 @Injectable()
 export class PacienteService {
@@ -15,16 +15,16 @@ export class PacienteService {
     return this.prisma.paciente.findMany();
   }
 
-  async findOne(id: string) {
-    return this.prisma.paciente.findUnique({ where: { id } });
+  async findOne(id: number) {
+    return this.prisma.paciente.findUnique({ where: { id : id } });
   }
 
-  async update(id: string, data: UpdatePatientDto) {
-    return this.prisma.paciente.update({ where: { id }, data });
+  async update(id: number, data: AtualizarPaciente) {
+    return this.prisma.paciente.update({ where: { id : id}, data });
   }
 
-  async remove(id: string) {
-    return this.prisma.paciente.delete({ where: { id } });
+  async remove(id: number) {
+    return this.prisma.paciente.delete({ where: { id : id } });
   }
 
 }
