@@ -30,7 +30,7 @@ export class ConsultaController {
   }
   @Put(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() updateConsultaDto: updateConsultaDto) {
-    return this.consultaService.update(id);
+    return this.consultaService.update( id, updateConsultaDto);
   }
 
   @Delete(':id')

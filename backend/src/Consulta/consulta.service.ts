@@ -21,8 +21,8 @@ export class ConsultaService {
   async remove(id: number) {
     return this.prisma.consulta.delete({ where: { id } });
   }
-  async update(id: number) {
-    return this.prisma.consulta.update({ where: { id }});
+  async update(id: number, updateConsultaDto: updateConsultaDto) {
+    return this.prisma.consulta.update({ where: { id:id }, data: updateConsultaDto });
   }
 
 }
