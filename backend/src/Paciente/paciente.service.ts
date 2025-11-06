@@ -1,30 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../Prisma/prisma.service';
 import { Paciente } from './paciente';
-import { UpdatePatientDto } from './atualizar.paciente';
+import { AtualizarPaciente } from './atualizar.paciente';
 
 @Injectable()
 export class PacienteService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: Paciente) {
-    return this.prisma.paciente.create({ data });
+ async create(data: Paciente) {
+  const existente = await this.prisma.paciente.findUnique({
+    where: { cpf: data.cpf },
+  });
+
+  if (existente) {
+    throw new Error(`Já existe um paciente com o CPF ${data.cpf}.`);
+  }
+
+  return this.prisma.paciente.create({ data });
+}
+
+
+  async searchByName(nomeCompleto: string) {
+    return this.prisma.paciente.findMany({
+      where: { nomeCompleto: { contains: nomeCompleto, mode: 'insensitive' } },
+    });
   }
 
   async findAll() {
     return this.prisma.paciente.findMany();
   }
 
-  async findOne(id: string) {
-    return this.prisma.paciente.findUnique({ where: { id } });
+  async findOne(id: number) {
+    const paciente = await this.prisma.paciente.findUnique({ where: { id: id } });
+
+    if (!paciente) {
+      throw new NotFoundException(`Paciente com ID ${id} não encontrado.`);
+    }
+
+    return paciente;
   }
 
-  async update(id: string, data: UpdatePatientDto) {
-    return this.prisma.paciente.update({ where: { id }, data });
+  async update(id: number, data: AtualizarPaciente) {
+    try {
+      return await this.prisma.paciente.update({ where: { id: id }, data });
+    } catch {
+      throw new NotFoundException(`Paciente com ID ${id} não encontrado.`);
+    }
   }
 
-  async remove(id: string) {
-    return this.prisma.paciente.delete({ where: { id } });
+  async remove(id: number) {
+    try {
+      return await this.prisma.paciente.delete({ where: { id: id } });
+    } catch {
+      throw new NotFoundException(`Paciente com ID ${id} não encontrado.`);
+    }
   }
 
 }
