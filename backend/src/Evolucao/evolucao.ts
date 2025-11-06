@@ -10,7 +10,7 @@ export class EvolucaoDTO {
     @IsDateString()
         data: Date;
     @IsDateString()
-        horarioInicio: Date;
+        horaInicio: Date;
     @IsString()
     @IsNotEmpty()
         descricao: string;

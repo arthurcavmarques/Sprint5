@@ -1,7 +1,7 @@
 import { Controller, Get, NotFoundException, Param, Post, Delete, Patch, Body, UseGuards } from '@nestjs/common';
 import { PacienteService } from './paciente.service';
 import { Paciente } from './paciente';
-import { UpdatePatientDto } from './atualizar.paciente';
+import { AtualizarPaciente } from './atualizar.paciente';
 
 @Controller('paciente')
 export class PacienteController {
@@ -13,7 +13,7 @@ export class PacienteController {
   }
 
   @Get(':id')
-   findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: number) {
     return this.pacienteService.findOne(id);
   } 
 
@@ -21,14 +21,14 @@ export class PacienteController {
   searchByName(@Param('nome') nomeCompleto: string) {
     return this.pacienteService.searchByName(nomeCompleto);
   }
-
+  
   @Post()
   create(@Body() createPacienteDto: Paciente) {
     return this.pacienteService.create(createPacienteDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updatePacienteDto: UpdatePatientDto) {
+  update(@Param('id') id: number, @Body() updatePacienteDto: AtualizarPaciente) {
     return this.pacienteService.update(id, updatePacienteDto);
   }
 

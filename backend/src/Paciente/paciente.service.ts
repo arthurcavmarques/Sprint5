@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../Prisma/prisma.service';
 import { Paciente } from './paciente';
-import { UpdatePatientDto } from './atualizar.paciente';
+import { AtualizarPaciente } from './atualizar.paciente';
 
 @Injectable()
 export class PacienteService {
@@ -40,7 +40,7 @@ export class PacienteService {
     return paciente;
   }
 
-  async update(id: number, data: UpdatePatientDto) {
+  async update(id: number, data: AtualizarPaciente) {
     try {
       return await this.prisma.paciente.update({ where: { id: id }, data });
     } catch {
@@ -55,4 +55,5 @@ export class PacienteService {
       throw new NotFoundException(`Paciente com ID ${id} não encontrado.`);
     }
   }
+
 }
