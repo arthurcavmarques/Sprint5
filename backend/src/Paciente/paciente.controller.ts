@@ -13,16 +13,13 @@ export class PacienteController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+   findOne(@Param('id') id: number) {
+    return this.pacienteService.findOne(id);
+  } 
 
-    const paciente = await this.pacienteService.findOne(id);
-
-    if(!paciente){
-      throw new NotFoundException(`Paciente com ID ${id} não encontrado.`);
-    }
-
-    return paciente;
-
+  @Get(':nome')
+  searchByName(@Param('nome') nomeCompleto: string) {
+    return this.pacienteService.searchByName(nomeCompleto);
   }
 
   @Post()
@@ -31,12 +28,12 @@ export class PacienteController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePacienteDto: UpdatePatientDto) {
+  update(@Param('id') id: number, @Body() updatePacienteDto: UpdatePatientDto) {
     return this.pacienteService.update(id, updatePacienteDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.pacienteService.remove(id);
   }
 

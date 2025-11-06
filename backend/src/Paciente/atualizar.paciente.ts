@@ -1,4 +1,4 @@
-import { IsOptional,IsNotEmpty,MinLength, IsString, IsEmail, Max, Min, IsNumber } from 'class-validator';
+import { IsOptional,IsNotEmpty,MinLength, IsString, IsEmail, MaxLength, IsDateString, IsPhoneNumber } from 'class-validator';
 
 export class UpdatePatientDto {
 
@@ -14,14 +14,18 @@ export class UpdatePatientDto {
 
   @IsOptional()
   @MinLength(11)
+  @MaxLength(11)
+  @IsPhoneNumber()
   telefone?: string;
 
   @IsOptional()
   @MinLength(11)
+  @MaxLength(11)
+  @IsString()
   cpf?: string;
 
   @IsOptional()
-  @MinLength(8)
+  @IsDateString()
   DataNascimento?: Date;
 
 }
