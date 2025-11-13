@@ -7,27 +7,27 @@ import { UpdateEvolucaoDTO } from './atualizar.evolucao';
 export class EvolucaoController {
   constructor(private readonly evoulacaoService: EvolucaoService) {}
 
-  @Post('evolucoes')
+  @Post('evolucao')
   async create(@Body() req: EvolucaoDTO) {
     return await this.evoulacaoService.create(req)
   }
 
-  @Get('evolucoes')
+  @Get('evolucao')
   async listAll() {
     return await this.evoulacaoService.listAll()
   }
 
-  @Get('evolucoes/:id')
-  async searchById(@Param('id', ParseIntPipe) id : number) {
+  @Get('evolucao/:id')
+  async searchById(@Param('id', ParseIntPipe),  id : number) {
     return await this.evoulacaoService.searchById(id)
   }
 
-  @Patch('evolucoes/:id')
+  @Patch('evolucao/:id')
   async updateEvolucao(@Body() req : UpdateEvolucaoDTO, @Param('id', ParseIntPipe) id : number) {
       return await this.evoulacaoService.updateEvolucao(req, id)
   }
 
-  @Delete('evolucoes/:id')
+  @Delete('evolucao/:id')
   async deleteEvolucao(@Param('id', ParseIntPipe) id : number) {
     return this.evoulacaoService.deleteEvolucao(id)
   }
