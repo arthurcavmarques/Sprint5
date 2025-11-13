@@ -8,9 +8,9 @@ export class EvolucaoDTO {
     @IsString()
         titulo: string;
     @IsDateString()
-        data: Date;
+        data: string;
     @IsDateString()
-        horaInicio: Date;
+        horaInicio: string;
     @IsString()
     @IsNotEmpty()
         descricao: string;
