@@ -2,13 +2,33 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../Prisma/prisma.service';
 import { ConsultaDTO } from './consulta';
 import { updateConsultaDto } from './consulta.update';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class ConsultaService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: ConsultaDTO) {
-    return this.prisma.consulta.create({ data });
+    const dataISO = dayjs(data.dataEvento, 'DD/MM/YYYY').toDate();
+    const horaInicioISO = dayjs(`${data.dataEvento} ${data.horarioInicio}`, 'DD/MM/YYYY HH:mm').toDate();
+    const horaFinalISO = dayjs(`${data.dataEvento} ${data.horarioFim}`, 'DD/MM/YYYY HH:mm').toDate();
+
+    const consulta = await this.prisma.consulta.create ({  
+      data : {
+        ...data,
+        dataEvento: dataISO,
+        horarioInicio: horaInicioISO,
+        horarioFim: horaFinalISO,
+      } 
+    });
+
+    return {
+      id : consulta.id,
+      dataEvento : data.dataEvento,
+      nomeEvento : consulta.nomeEvento,
+      horarioInicio : data.horarioInicio,
+      horarioFim : data.horarioFim
+    }
   }
 
   async findId(id: number) {
