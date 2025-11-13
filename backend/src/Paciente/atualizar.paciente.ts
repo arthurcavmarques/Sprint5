@@ -15,7 +15,7 @@ export class AtualizarPaciente {
   @IsOptional()
   @MinLength(11)
   @MaxLength(11)
-  @IsPhoneNumber()
+  @IsPhoneNumber('BR')
   telefone?: string;
 
   @IsOptional()
@@ -26,6 +26,6 @@ export class AtualizarPaciente {
 
   @IsOptional()
   @IsDateString()
-  DataNascimento?: Date;
+  dataNascimento?: Date;
 
 }

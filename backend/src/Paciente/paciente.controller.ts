@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param, Post, Delete, Patch, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Post, Delete, Patch, Body, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { PacienteService } from './paciente.service';
 import { Paciente } from './paciente';
 import { AtualizarPaciente } from './atualizar.paciente';
@@ -13,11 +13,11 @@ export class PacienteController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.pacienteService.findOne(id);
   } 
 
-  @Get(':nome')
+  @Get('search/:nome')
   searchByName(@Param('nome') nomeCompleto: string) {
     return this.pacienteService.searchByName(nomeCompleto);
   }
@@ -28,12 +28,12 @@ export class PacienteController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updatePacienteDto: AtualizarPaciente) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updatePacienteDto: AtualizarPaciente) {
     return this.pacienteService.update(id, updatePacienteDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.pacienteService.remove(id);
   }
 

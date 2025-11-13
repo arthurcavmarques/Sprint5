@@ -9,7 +9,7 @@ export class Paciente {
     @IsDateString()
         dataNascimento: Date;
 
-    @IsPhoneNumber()
+    @IsPhoneNumber('BR')
     @IsNotEmpty()
     @MinLength(11)
     @MaxLength(11)

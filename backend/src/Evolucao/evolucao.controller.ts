@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { EvolucaoService } from './evolucao.service';
 import { EvolucaoDTO } from './evolucao';
 import { UpdateEvolucaoDTO } from './atualizar.evolucao';
@@ -18,17 +18,17 @@ export class EvolucaoController {
   }
 
   @Get('evolucoes/:id')
-  async searchById(@Param('id') id : number) {
+  async searchById(@Param('id', ParseIntPipe) id : number) {
     return await this.evoulacaoService.searchById(id)
   }
 
   @Patch('evolucoes/:id')
-  async updateEvolucao(@Body() req : UpdateEvolucaoDTO, @Param('id') id : number) {
+  async updateEvolucao(@Body() req : UpdateEvolucaoDTO, @Param('id', ParseIntPipe) id : number) {
       return await this.evoulacaoService.updateEvolucao(req, id)
   }
 
   @Delete('evolucoes/:id')
-  async deleteEvolucao(@Param('id') id : number) {
+  async deleteEvolucao(@Param('id', ParseIntPipe) id : number) {
     return this.evoulacaoService.deleteEvolucao(id)
   }
 }

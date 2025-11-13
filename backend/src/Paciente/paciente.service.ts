@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../Prisma/prisma.service';
 import { Paciente } from './paciente';
 import { AtualizarPaciente } from './atualizar.paciente';
@@ -13,7 +13,7 @@ export class PacienteService {
   });
 
   if (existente) {
-    throw new Error(`Já existe um paciente com o CPF ${data.cpf}.`);
+    throw new BadRequestException(`Já existe um paciente com o CPF ${data.cpf}.`);
   }
 
   return this.prisma.paciente.create({ data });
