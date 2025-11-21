@@ -1,15 +1,18 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { usePatients } from "../components/PatientContext";
+import "./Form.css";
 
-interface PatientFormProps {
-  onSubmit?: (data: any) => void;
-}
+const PatientForm = () => {
+  const navigate = useNavigate();
+  const { addPatient } = usePatients();
 
-const PatientForm: React.FC<PatientFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     name: "",
-    age: "",
+    birthdate: "",
     phone: "",
-    address: "",
+    email: "",
+    cpf: "",
     notes: "",
   });
 
@@ -22,78 +25,96 @@ const PatientForm: React.FC<PatientFormProps> = ({ onSubmit }) => {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (onSubmit) onSubmit(formData);
-    alert("Paciente cadastrado com sucesso!");
+
+    const newPatient = {
+      id: String(Date.now()).slice(-6),
+      ...formData,
+    };
+
+    addPatient(newPatient);
+    navigate("/");
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Cadastrar Paciente</h2>
+    <div className="overlay">
+      <div className="modal">
+        <div className="modal-header">
+          <h2>Novo Paciente</h2>
+          <button className="close-btn" onClick={() => navigate("/")}>×</button>
+        </div>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          maxWidth: "400px",
-        }}
-      >
-        <label>
-          Nome
-          <input
-            type="text"
-            name="name"
-            required
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </label>
+        <form className="form" onSubmit={handleSubmit}>
+          <label>
+            Nome Completo
+            <input
+              type="text"
+              name="name"
+              required
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label>
-          Idade
-          <input
-            type="number"
-            name="age"
-            required
-            value={formData.age}
-            onChange={handleChange}
-          />
-        </label>
+          <label>
+            Data de Nascimento
+            <input
+              type="date"
+              name="birthdate"
+              required
+              value={formData.birthdate}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label>
-          Telefone
-          <input
-            type="text"
-            name="phone"
-            required
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </label>
+          <label>
+            Telefone
+            <input
+              type="text"
+              name="phone"
+              required
+              placeholder="(51) 98888-8888"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label>
-          Endereço
-          <input
-            type="text"
-            name="address"
-            required
-            value={formData.address}
-            onChange={handleChange}
-          />
-        </label>
+          <label>
+            Email
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label>
-          Observações
-          <textarea
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-          />
-        </label>
+          <label>
+            CPF
+            <input
+              type="text"
+              name="cpf"
+              required
+              placeholder="000.000.000-00"
+              value={formData.cpf}
+              onChange={handleChange}
+            />
+          </label>
 
-        <button type="submit">Salvar</button>
-      </form>
+          <label>
+            Observações
+            <textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+            />
+          </label>
+
+          <button type="submit" className="submit-btn">
+            Cadastrar
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

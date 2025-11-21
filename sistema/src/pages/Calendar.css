@@ -1,0 +1,143 @@
+.calendar-container {
+  flex: 1;
+  padding: 20px 40px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+.day-cell {
+  min-height: 100px;
+  border: 1px solid #f0f0f0;
+  background: white;
+  padding: 8px;
+  position: relative;
+}
+.day-number {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 12px;
+  color: #888;
+}
+.event-pill {
+  display: inline-block;
+  background: #3ca493;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: 26px;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.selected-day {
+  background: #fff8df;
+  border: 1px solid #f1e6b7;
+}
+
+/* Título + botão */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.calendar-header h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+/* Botão para criar novo evento */
+.add-event-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background-color: #3ca493;
+  color: rgb(22, 69, 79);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  filter: brightness(0.95);
+  transition: 0.2s;
+}
+
+.add-event-btn:hover {
+  background-color: #72fcec;
+}
+
+/* Container dos cards */
+.event-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Card de evento */
+.event-card {
+  width: 280px;
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  border: 2px solid #ccc;
+  transition: 0.2s;
+  cursor: pointer;
+  color: rgb(40, 40, 40);
+  text-decoration: none;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+}
+
+/* Título */
+.event-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+/* Linha das infos */
+.event-info {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+/* Seções internas */
+.event-divider {
+  border: 1px solid #eee;
+  margin: 10px 0;
+}
+
+/* Botões dentro do card */
+.event-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.event-btn {
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: none;
+  background: #e7e7e7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgb(22, 69, 79);
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.event-btn:hover {
+  background-color: #3ca493;
+  color: white;
+}

@@ -1,0 +1,104 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 24px;
+}
+
+.modal {
+  width: 100%;
+  max-width: 560px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(22, 69, 79, 0.12);
+  padding: 20px;
+  color: rgba(22, 69, 79);
+}
+
+.modal h3 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  color: rgba(22, 69, 79);
+}
+
+.modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.modal input,
+.modal select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  background: #fbfbfb;
+}
+
+.modal button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal button[type="button"] {
+  background: #3ca493;
+  color: rgba(22, 69, 79);
+}
+
+.modal .primary {
+  background: #3ca493;
+  color: rgba(22, 69, 79);
+}
+
+.modal .danger {
+  background: #d9534f;
+  color:rgba(22, 69, 79);
+}
+
+.modal .primary:hover {
+  background-color: #72fcec;
+}
+
+.modal .danger:hover {
+  background-color: #ff6b6b;
+}
+
+/* Global helper classes so `danger` buttons are red everywhere */
+.danger {
+  background: #d9534f;
+  color: rgba(22, 69, 79);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.danger:hover {
+  background: #ff6b6b;
+}
+
+.primary {
+  background: #3ca493;
+  color: rgba(22, 69, 79);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.primary:hover {
+  background: #72fcec;
+}
+
+.modal .actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}

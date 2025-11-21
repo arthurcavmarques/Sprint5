@@ -1,15 +1,16 @@
 export interface Patient {
-  id: number;
+  id: string;
   name: string;
-  age: number;
-  phone: string;
-  address: string;
+  birth?: string;
+  cpf?: string;
+  phone?: string;
+  email?: string;
   notes?: string;
 }
 
 export interface Consultation {
   id: number;
-  patientId: number;
+  patientId: string;
   date: string;
   reason: string;
   notes?: string;

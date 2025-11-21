@@ -1,93 +1,87 @@
+import { useEffect, useState } from "react";
+import CalendarView from "../components/CalendarView";
+import CreateConsultationModal from "../components/CreateConsultationModal";
+import EditConsultationModal from "../components/EditConsultationModal";
+import { usePatients } from "../components/PatientContext";
+
 const CalendarPage = () => {
+  const [events, setEvents] = useState<any[]>([]);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined);
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
+  const { patients } = usePatients();
+
+  useEffect(() => {
+    fetch("/api/consultations")
+      .then(res => res.json())
+      .then(data => {
+        const formatted = data.map((c: any) => ({
+          id: c.id,
+          title: c.patientName,
+          date: c.date,
+          patientId: c.patientId,
+        }));
+        setEvents(formatted);
+      }).catch(() => {
+        setEvents([]);
+      });
+  }, []);
+
+  const handleDateClick = (info: any) => {
+    setSelectedDate(info.dateStr);
+    setCreateOpen(true);
+  };
+
+  const handleEventClick = (info: any) => {
+    const ev = info.event;
+    setSelectedEvent({ id: ev.id, title: ev.title, date: ev.startStr?.split("T")[0] ?? ev.startStr, patientId: ev.extendedProps?.patientId });
+    setEditOpen(true);
+  };
+
+  const handleCreateSave = (payload: any) => {
+    const id = String(Date.now()).slice(-6);
+    const patientName = patients.find((p: any) => p.id === payload.patientId)?.name ?? payload.title;
+    const newEv = { id, title: payload.title || patientName, date: payload.date, patientId: payload.patientId };
+    setEvents((prev) => [...prev, newEv]);
+    setCreateOpen(false);
+  };
+
+  const handleEditSave = (payload: any) => {
+    setEvents((prev) => prev.map((e) => (e.id === payload.id ? { ...e, ...payload } : e)));
+    setEditOpen(false);
+    setSelectedEvent(null);
+  };
+
+  const handleDelete = (id: string) => {
+    setEvents((prev) => prev.filter((e) => e.id !== id));
+    setEditOpen(false);
+    setSelectedEvent(null);
+  };
+
   return (
     <div style={{ padding: "20px" }}>
-      {/* Título */}
-      <h2>Calendário</h2>
 
-      {/* Container do calendário */}
-      <div>
-        {/* Topo: Mês + navegação */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h3>Novembro de 2025</h3>
+      <CalendarView 
+        events={events}
+        onDateClick={handleDateClick}
+        onEventClick={handleEventClick}
+      />
 
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button>{"<-"}</button>
-            <button>{"->"}</button>
-          </div>
-        </div>
+      <CreateConsultationModal
+        visible={createOpen}
+        initialDate={selectedDate}
+        onClose={() => setCreateOpen(false)}
+        onSave={handleCreateSave}
+      />
 
-        {/* Grade do calendário */}
-        <table border={1} cellPadding={20} cellSpacing={0}>
-          <thead>
-            <tr>
-              <th>domingo</th>
-              <th>segunda-feira</th>
-              <th>terça-feira</th>
-              <th>quarta-feira</th>
-              <th>quinta-feira</th>
-              <th>sexta-feira</th>
-              <th>sábado</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {/* Linha 1 */}
-            <tr>
-              <td></td>
-              <td>27</td>
-              <td>28</td>
-              <td>29</td>
-              <td>30</td>
-              <td>31</td>
-              <td>1</td>
-            </tr>
-
-            {/* Linha 2 */}
-            <tr>
-              <td>2</td>
-              <td>3</td>
-              <td>4</td>
-              <td>5</td>
-              <td>6</td>
-              <td>7</td>
-              <td>8</td>
-            </tr>
-
-            {/* Linha 3 */}
-            <tr>
-              <td>9</td>
-              <td>10</td>
-              <td>11</td>
-              <td>12</td>
-              <td>13</td>
-              <td>14</td>
-              <td>15</td>
-            </tr>
-
-            {/* Linha 4 */}
-            <tr>
-              <td>16</td>
-              <td>17</td>
-              <td>18</td>
-              <td>19</td>
-              <td>20</td>
-              <td>21</td>
-              <td>22</td>
-            </tr>
-
-            {/* Linha 5 */}
-            <tr>
-              <td>23</td>
-              <td>24</td>
-              <td>25</td>
-              <td>26</td>
-              <td>27</td>
-              <td>28</td>
-              <td>29</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <EditConsultationModal
+        visible={editOpen}
+        event={selectedEvent}
+        onClose={() => setEditOpen(false)}
+        onSave={handleEditSave}
+        onDelete={handleDelete}
+      />
     </div>
   );
 };

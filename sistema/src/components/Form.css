@@ -1,0 +1,84 @@
+/* Fundo escurecido */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+}
+
+/* Caixa branca */
+.modal {
+  background: #ffffff;
+  width: 520px;
+  border-radius: 14px;
+  padding: 24px 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Cabeçalho */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #444;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+/* Inputs */
+.form label {
+  font-size: 14px;
+  color: #444;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.form input,
+.form textarea {
+  margin-top: 4px;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.form input:focus,
+.form textarea:focus {
+  border-color: #1a706a;
+}
+
+/* Botão */
+.submit-btn {
+  margin-top: 10px;
+  width: 150px;
+  padding: 10px;
+  background: #1a706a;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  align-self: center;
+  transition: 0.2s;
+}
+
+.submit-btn:hover {
+  background: #155b55;
+}

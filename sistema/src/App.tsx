@@ -1,25 +1,26 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import NavBar from "./components/NavBar";
-
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import PatientPage from "./pages/PatientPage";
-import ConsultationPage from "./pages/ConsultationPage";
 import CalendarPage from "./pages/CalendarPage";
+import Layout from "./components/Layout";
+import PatientDetailsPage from "./pages/PatientDetailsPage";
+import PatientForm from "./components/PatientForm";
+import { PatientProvider } from "./components/PatientContext";
 
-const App = () => {
+
+export default function App() {
   return (
-    <Router>
-      <NavBar />
-
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/patients" element={<PatientPage />} />
-        <Route path="/consultations" element={<ConsultationPage />} />
-        <Route path="/calendar" element={<CalendarPage />} />
-      </Routes>
-    </Router>
+    <PatientProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} index />
+            <Route path="/patients/:id" element={<PatientDetailsPage />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/novo-paciente" element={<PatientForm />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </PatientProvider>
+   
   );
-};
-
-export default App;
+}
