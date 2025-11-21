@@ -38,7 +38,7 @@
 .btn-primary,
 .btn-secondary {
   background-color: #3ca493;
-  color: #16454f;
+  color: rgb(22, 69, 79);
   padding: 10px 16px;
   border-radius: 8px;
   border: none;
@@ -47,9 +47,22 @@
   transition: 0.2s;
 }
 
+.btn-primary-edit {
+  background-color: #3ca493;
+  color: rgb(22, 69, 79);
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+  margin-left: 592px;
+}
+
 .btn-primary:hover,
-.btn-secondary:hover {
+.btn-secondary:hover, .btn-primary-edit:hover {
   background-color: #72fcec;
+  transition: 0.2s;
 }
 
 .details-tabs {

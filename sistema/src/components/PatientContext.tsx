@@ -13,8 +13,8 @@ export interface Patient {
 interface PatientContextType {
   patients: Patient[];
   addPatient: (patient: Patient) => void;
-  deletePatient: (id: string) => void;       // ⭐ ADICIONADO
-  updatePatient: (patient: Patient) => void; // ⭐ OPCIONAL MAS ÚTIL
+  deletePatient: (id: string) => void;      
+  updatePatient: (patient: Patient) => void; 
 }
 
 const PatientContext = createContext<PatientContextType>({

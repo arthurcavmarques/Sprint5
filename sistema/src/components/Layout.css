@@ -7,10 +7,9 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  margin-left: 80px; /* reserve space for fixed sidebar */
+  margin-left: 80px; 
 }
 
-/* barra superior */
 .topbar {
   height: 60px;
   background: white;
@@ -24,7 +23,6 @@
   font-weight: 500;
 }
 
-/* conteúdo abaixo da topbar */
 .content {
   flex: 1;
   padding: 20px;

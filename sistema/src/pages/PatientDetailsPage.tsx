@@ -5,7 +5,6 @@ import "./PatientDetails.css";
 
 const PatientDetailsPage: React.FC = () => {
   const { id } = useParams();
-  // If no patient id in the route, don't show details
   if (!id) {
     return (
       <div className="details-empty">
@@ -68,14 +67,31 @@ const PatientDetailsPage: React.FC = () => {
   const [eventEnd, setEventEnd] = useState("");
 
   const [editingEvent, setEditingEvent] = useState<number | null>(null);
+  const { updatePatient } = usePatients();
+
+const [editingData, setEditingData] = useState(false);
+
+const [editData, setEditData] = useState({
+  id: patient.id,
+  name: patient.name,
+  birthdate: patient.birth,
+  phone: patient.phone,
+  email: patient.email,
+  cpf: patient.cpf,
+  firstConsultation: patient.firstConsultation,
+});
+
+function handleSaveData() {
+  updatePatient(editData);
+  setEditingData(false);
+}
+
 
   const handleDeletePatient = () => {
     if (patient.id) {
-      // remove patient from context
       deletePatient(patient.id);
     }
 
-    // close modal and navigate home (SPA)
     setShowDeleteModal(false);
     navigate("/");
   };
@@ -227,10 +243,22 @@ const PatientDetailsPage: React.FC = () => {
         <>
           <h3 className="section-title">Informações do Paciente</h3>
 
+          <button
+            className="btn-primary-edit"
+            style={{ marginBottom: 15 }}
+            onClick={() => setEditingData(!editingData)}
+          >
+            {editingData ? "Cancelar Edição" : "Editar Dados"}
+          </button>
+
           <div className="details-grid">
             <div className="info-box">
               <p><b>Nome</b></p>
-              <input disabled value={patient.name} />
+              <input
+                disabled={!editingData}
+                value={editData.name}
+                onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+              />
             </div>
 
             <div className="info-box">
@@ -240,36 +268,68 @@ const PatientDetailsPage: React.FC = () => {
 
             <div className="info-box">
               <p><b>Data de Nascimento</b></p>
-              <input disabled value={patient.birth} />
+              <input
+                type="date"
+                disabled={!editingData}
+                value={editData.birthdate}
+                onChange={(e) =>
+                  setEditData({ ...editData, birthdate: e.target.value })
+                }
+              />
             </div>
 
             <div className="info-box">
               <p><b>Telefone</b></p>
-              <input disabled value={patient.phone} />
-            </div>
-
-            <div className="info-box">
-              <p><b>Endereço de Email</b></p>
-              <input disabled value={patient.email} />
-            </div>
-
-            <div className="info-box">
-              <p><b>CPF</b></p>
-              <input disabled value={patient.cpf} />
+              <input
+                disabled={!editingData}
+                value={editData.phone}
+                onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
+              />
             </div>
 
             <div className="info-box">
               <p><b>Email</b></p>
-              <input disabled value={patient.email} />
+              <input
+                disabled={!editingData}
+                value={editData.email}
+                onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+              />
+            </div>
+
+            <div className="info-box">
+              <p><b>CPF</b></p>
+              <input
+                disabled={!editingData}
+                value={editData.cpf}
+                onChange={(e) => setEditData({ ...editData, cpf: e.target.value })}
+              />
             </div>
 
             <div className="info-box">
               <p><b>Primeira Consulta</b></p>
-              <input disabled value={patient.firstConsultation} />
+              <input
+                type="date"
+                disabled={!editingData}
+                value={editData.firstConsultation}
+                onChange={(e) =>
+                  setEditData({ ...editData, firstConsultation: e.target.value })
+                }
+              />
             </div>
           </div>
+
+          {editingData && (
+            <button
+              className="btn-primary-edit"
+              style={{ marginTop: 20 }}
+              onClick={handleSaveData}
+            >
+              Salvar Alterações
+            </button>
+          )}
         </>
       )}
+
 
       {activeTab === "agenda" && (
         <div className="agenda-container">
@@ -542,4 +602,3 @@ const PatientDetailsPage: React.FC = () => {
 };
 
 export default PatientDetailsPage;
- 

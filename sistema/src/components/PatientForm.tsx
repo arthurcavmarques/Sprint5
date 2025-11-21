@@ -101,15 +101,6 @@ const PatientForm = () => {
             />
           </label>
 
-          <label>
-            Observações
-            <textarea
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-            />
-          </label>
-
           <button type="submit" className="submit-btn">
             Cadastrar
           </button>

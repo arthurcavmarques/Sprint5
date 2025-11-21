@@ -35,12 +35,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .selected-day {
   background: #fff8df;
   border: 1px solid #f1e6b7;
 }
 
-/* Título + botão */
 .calendar-header {
   display: flex;
   align-items: center;
@@ -53,7 +53,6 @@
   font-size: 28px;
 }
 
-/* Botão para criar novo evento */
 .add-event-btn {
   display: flex;
   align-items: center;
@@ -73,14 +72,12 @@
   background-color: #72fcec;
 }
 
-/* Container dos cards */
 .event-list {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
 }
 
-/* Card de evento */
 .event-card {
   width: 280px;
   background: white;
@@ -98,25 +95,21 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
 }
 
-/* Título */
 .event-card h3 {
   margin: 0 0 8px 0;
   font-size: 18px;
 }
 
-/* Linha das infos */
 .event-info {
   font-size: 14px;
   margin-bottom: 6px;
 }
 
-/* Seções internas */
 .event-divider {
   border: 1px solid #eee;
   margin: 10px 0;
 }
 
-/* Botões dentro do card */
 .event-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;

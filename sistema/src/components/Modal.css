@@ -71,7 +71,6 @@
   background-color: #ff6b6b;
 }
 
-/* Global helper classes so `danger` buttons are red everywhere */
 .danger {
   background: #d9534f;
   color: rgba(22, 69, 79);
