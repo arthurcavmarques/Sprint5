@@ -1,0 +1,43 @@
+/* MODO CLARO (padrão) */
+body {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* MODO ESCURO */
+body.dark {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+
+/* Cards */
+.card {
+  background-color: #fff;
+}
+
+body.dark .card {
+  background-color: #2a2a2a;
+  border-color: #3b3b3b;
+}
+
+/* Inputs */
+input {
+  background-color: #fff;
+  color: #000;
+}
+
+body.dark input {
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+/* Botões */
+button {
+  background-color: #e6e6e6;
+  color: #000;
+}
+
+body.dark button {
+  background-color: #444;
+  color: #fff;
+}
