@@ -222,13 +222,14 @@
 .event-modal-box {
   width: 480px;
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 20px rgba(22,69,79);
 }
 
 .event-modal-header {
   display: flex;
+  color: rgb(22, 69, 79);
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
@@ -248,6 +249,7 @@
 
 .field {
   display: flex;
+  color: rgb(22, 69, 79);
   flex-direction: column;
   margin-bottom: 16px;
 }
@@ -295,7 +297,7 @@
 }
 
 .evolution-card {
-  border: 1px solid #dadada;
+  border: 1px solid rgb(22, 69, 79);
   background: white;
   width: 50%;
   padding: 12px;
@@ -315,10 +317,10 @@
 
 .evolution-modal-box {
   width: 480px;
-  background: white;
+  background: rgb(22, 69, 79);
   border-radius: 10px;
   padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(22,69,79);
 }
 
 .evolution-modal-header {
@@ -382,4 +384,113 @@
   font-weight: bold;
   color: rgb(22, 69, 79);
   margin-bottom: 6px;
+}
+
+body.dark .details-container {
+  color: #f0f0f0;
+}
+
+body.dark .details-header h2,
+body.dark .details-tabs p {
+  color: rgb(22, 69, 79);
+}
+
+body.dark .details-avatar {
+  background-color: #0a7564;
+  color: white;
+}
+
+body.dark .details-tabs p:hover {
+  color: #72fcec;
+}
+
+body.dark .active-tab {
+  border-bottom: 2px solid #3ca493;
+  color: #72fcec;
+}
+
+body.dark .btn-primary,
+body.dark .btn-secondary,
+body.dark .btn-primary-edit,
+body.dark .create-evolution-btn,
+body.dark .confirm-btn {
+  background-color: #3ca493;
+  color: rgb(22, 69, 79);
+}
+
+body.dark .btn-primary:hover,
+body.dark .btn-secondary:hover,
+body.dark .btn-primary-edit:hover,
+body.dark .create-evolution-btn:hover,
+body.dark .confirm-btn:hover {
+  background-color: #72fcec;
+  color: #16454f;
+}
+
+body.dark .delete-btn {
+  background-color: #c94d4a;
+}
+
+body.dark .delete-btn:hover {
+  background-color: #ff6b6b;
+}
+
+body.dark .info-box input,
+body.dark .field input,
+body.dark .field select,
+body.dark .evolution-textarea {
+  background: #222 !important;
+  border: 1px solid #444 !important;
+  color: #fff !important;
+}
+
+body.dark .agenda-card,
+body.dark .evolution-card {
+  background: #1b1b1b;
+  border: 1px solid #333;
+  color: #fff;
+}
+
+body.dark .agenda-card .patient-name {
+  color: #72fcec;
+}
+
+body.dark .agenda-card p,
+body.dark .evolution-card p {
+  color: white;
+  opacity: 0.9;
+}
+
+body.dark .modal-box,
+body.dark .event-modal-box {
+  background: #1b1b1b;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  color: #fff;
+}
+
+body.dark .warning-text {
+  color: #ddd;
+}
+
+body.dark .evolution-modal-box {
+  background: #0f2f36;
+  color: white;
+}
+
+body.dark .field label {
+  color: rgb(22, 69, 79);
+}
+
+body.dark .event-modal-header,
+body.dark .evolution-modal-header {
+  color: rgb(22, 69, 79);
+}
+
+body.dark .edit-icon {
+  color: white;
+  opacity: 0.8;
+}
+
+body.dark .edit-icon:hover {
+  opacity: 1;
 }

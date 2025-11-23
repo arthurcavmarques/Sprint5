@@ -4,7 +4,7 @@ import "./Layout.css";
 
 export default function Layout() {
   return (
-    <div className="layout">
+    <div className={`layout light`}> 
       <NavBar />
 
       <div className="main-area">

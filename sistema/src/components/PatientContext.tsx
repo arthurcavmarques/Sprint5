@@ -1,5 +1,20 @@
-import React, { createContext, useContext, useState } from "react";
-import "./Form.css"
+import React, { createContext, useContext, useEffect, useState } from "react";
+
+export interface PatientEvent {
+  id: string;
+  date: string;
+  title: string;
+  start?: string;
+  end?: string;
+}
+
+export interface PatientEvolution {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  description: string;
+}
 
 export interface Patient {
   id: string;
@@ -8,13 +23,18 @@ export interface Patient {
   phone: string;
   email: string;
   cpf: string;
+  firstConsultation: string;
+  events: PatientEvent[];
+  evolutions: PatientEvolution[];
 }
 
 interface PatientContextType {
   patients: Patient[];
-  addPatient: (patient: Patient) => void;
-  deletePatient: (id: string) => void;      
-  updatePatient: (patient: Patient) => void; 
+  addPatient: (p: Patient) => void;
+  deletePatient: (id: string) => void;
+  updatePatient: (p: Patient) => void;
+  addEvent: (id: string, ev: PatientEvent) => void;
+  addEvolution: (id: string, evo: PatientEvolution) => void;
 }
 
 const PatientContext = createContext<PatientContextType>({
@@ -22,34 +42,66 @@ const PatientContext = createContext<PatientContextType>({
   addPatient: () => {},
   deletePatient: () => {},
   updatePatient: () => {},
+  addEvent: () => {},
+  addEvolution: () => {},
 });
 
-export const PatientProvider = ({ children }: { children: React.ReactNode }) => {
-  const [patients, setPatients] = useState<Patient[]>([]);
+export const PatientProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [patients, setPatients] = useState<Patient[]>(() => {
+    const saved = localStorage.getItem("patients");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  function addPatient(patient: Patient) {
-    setPatients((prev) => [...prev, patient]);
-  }
+  useEffect(() => {
+    localStorage.setItem("patients", JSON.stringify(patients));
+  }, [patients]);
 
-  function deletePatient(id: string) {
+  const addPatient = (p: Patient) => {
+    setPatients((prev) => [...prev, p]);
+  };
+
+  const deletePatient = (id: string) => {
     setPatients((prev) => prev.filter((p) => p.id !== id));
-  }
+  };
 
-  function updatePatient(updated: Patient) {
+  const updatePatient = (updated: Patient) => {
     setPatients((prev) =>
       prev.map((p) => (p.id === updated.id ? updated : p))
     );
-  }
+  };
+
+  const addEvent = (patientId: string, ev: PatientEvent) => {
+    setPatients((prev) =>
+      prev.map((p) =>
+        p.id === patientId ? { ...p, events: [...p.events, ev] } : p
+      )
+    );
+  };
+
+  const addEvolution = (patientId: string, evo: PatientEvolution) => {
+    setPatients((prev) =>
+      prev.map((p) =>
+        p.id === patientId ? { ...p, evolutions: [...p.evolutions, evo] } : p
+      )
+    );
+  };
 
   return (
     <PatientContext.Provider
-      value={{ patients, addPatient, deletePatient, updatePatient }}
+      value={{
+        patients,
+        addPatient,
+        deletePatient,
+        updatePatient,
+        addEvent,
+        addEvolution,
+      }}
     >
       {children}
     </PatientContext.Provider>
   );
 };
 
-export function usePatients() {
-  return useContext(PatientContext);
-}
+export const usePatients = () => useContext(PatientContext);

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { usePatients } from "./PatientContext";
 import "./Modal.css";
+import "../pages/PatientDetails.css"
 
 interface Ev {
   id: string;
@@ -71,9 +72,9 @@ const EditConsultationModal = ({ visible, event, onSave, onDelete, onClose }: Pr
 
       {confirming && (
         <div className="modal-overlay">
-          <div className="modal">
-            <h3>Confirmar exclusão</h3>
-            <p>Tem certeza que deseja excluir esta consulta?</p>
+          <div className="modal-box">
+            <h3>Tem certeza que deseja excluir esta consulta?</h3>
+            <p className="warning-text">Esta ação é irreversível.</p>
             <div className="actions" style={{ marginTop: 12 }}>
               <button className="danger" onClick={() => setConfirming(false)}>Cancelar</button>
               <button className="primary" onClick={() => { onDelete(event!.id); setConfirming(false); if (onClose) onClose(); }}>Confirmar

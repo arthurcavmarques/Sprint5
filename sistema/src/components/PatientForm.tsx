@@ -7,14 +7,18 @@ const PatientForm = () => {
   const navigate = useNavigate();
   const { addPatient } = usePatients();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    birthdate: "",
-    phone: "",
-    email: "",
-    cpf: "",
-    notes: "",
-  });
+const [formData, setFormData] = useState({
+  name: "",
+  birthdate: "",
+  phone: "",
+  email: "",
+  cpf: "",
+  firstConsultation: "",   
+  events: [],
+  evolutions: [],
+  notes: "",
+});
+
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -40,7 +44,7 @@ const PatientForm = () => {
       <div className="modal">
         <div className="modal-header">
           <h2>Novo Paciente</h2>
-          <button className="close-btn" onClick={() => navigate("/")}>×</button>
+          <button className="close-btn" onClick={() => navigate("/")}>✕</button>
         </div>
 
         <form className="form" onSubmit={handleSubmit}>

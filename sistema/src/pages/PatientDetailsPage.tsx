@@ -40,11 +40,13 @@ const PatientDetailsPage: React.FC = () => {
     initials: computeInitials(patientName),
     name: patientName,
     record: String(found.id),
-    birth: (found as any).birth || "",
+    birth: found.birthdate || "",
     phone: found.phone || "",
-    cpf: (found as any).cpf || "",
-    email: (found as any).email || "",
-    firstConsultation: (found as any).firstConsultation || "",
+    cpf: found.cpf || "",
+    email: found.email || "",
+    firstConsultation: found.firstConsultation || "",
+    events: found.events || [],
+    evolutions: found.evolutions || []
   };
 
   const [activeTab, setActiveTab] = useState<"dados" | "agenda" | "evolucoes">(
@@ -72,13 +74,15 @@ const PatientDetailsPage: React.FC = () => {
 const [editingData, setEditingData] = useState(false);
 
 const [editData, setEditData] = useState({
-  id: patient.id,
-  name: patient.name,
-  birthdate: patient.birth,
-  phone: patient.phone,
-  email: patient.email,
-  cpf: patient.cpf,
-  firstConsultation: patient.firstConsultation,
+  id: patient.id!,
+  name: patient.name || "",
+  birthdate: patient.birth || "",
+  phone: patient.phone || "",
+  email: patient.email || "",
+  cpf: patient.cpf || "",
+  firstConsultation: patient.firstConsultation || "",
+  events: patient.events ?? [],
+  evolutions: patient.evolutions ?? []
 });
 
 function handleSaveData() {

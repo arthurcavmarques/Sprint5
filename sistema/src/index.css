@@ -1,83 +1,43 @@
-/* Reset básico */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter", Arial, Helvetica, sans-serif;
-}
-
-/* Fundo geral */
+/* MODO CLARO (padrão) */
 body {
-  background: #f5f7fa;
-  color: #1a1a1a;
-  -webkit-font-smoothing: antialiased;
+  background-color: #ffffff;
+  color: #000000;
 }
 
-/* Suaviza o layout do app */
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+/* MODO ESCURO */
+body.dark {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
 }
 
-/* Scroll mais suave */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Títulos */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  color: #222;
-}
-
-/* Inputs padrão */
-input, textarea, select {
-  font-family: inherit;
-  padding: 10px 12px;
-  border: 1px solid #d9dee3;
-  border-radius: 6px;
-  background: white;
-  outline: none;
-  transition: border 0.2s ease;
-}
-
-input:focus, textarea:focus, select:focus {
-  border-color: #3b7aa1;
-}
-
-/* Botões padrão */
-button {
-  border: none;
-  cursor: pointer;
-  padding: 10px 18px;
-  border-radius: 6px;
-  background: #3b7aa1;
-  color: white;
-  font-weight: 500;
-  transition: background 0.2s ease;
-}
-
-button:hover {
-  background: #326986;
-}
-
-/* Cards genéricos */
+/* Cards */
 .card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0px 2px 8px rgba(0,0,0,0.07);
+  background-color: #fff;
 }
 
-/* Layout das páginas */
-.page-container {
-  padding: 32px;
+body.dark .card {
+  background-color: #2a2a2a;
+  border-color: #3b3b3b;
 }
 
-/* Container centralizado como o da imagem */
-.page-wrapper {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
+/* Inputs */
+input {
+  background-color: #fff;
+  color: #000;
+}
+
+body.dark input {
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+/* Botões */
+button {
+  background-color: #e6e6e6;
+  color: #000;
+}
+
+body.dark button {
+  background-color: #444;
+  color: #fff;
 }
