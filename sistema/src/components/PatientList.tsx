@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./PatientsList.css";
+import "../styles/PatientList.css";
 
 interface Patient {
   id: number;

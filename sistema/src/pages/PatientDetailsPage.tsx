@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePatients } from "../components/PatientContext";
-import "./PatientDetails.css";
+import "../styles/PatientDetails.css";
 
 const PatientDetailsPage: React.FC = () => {
   const { id } = useParams();
@@ -13,13 +13,14 @@ const PatientDetailsPage: React.FC = () => {
     );
   }
 
-  const computeInitials = (fullName: string) =>
-    fullName
-      .split(" ")
-      .filter(Boolean)
-      .map((n) => n[0].toUpperCase())
-      .slice(0, 2)
-      .join("");
+  const computeInitials = (fullName: string) => {
+  const parts = fullName.trim().split(" ").filter(Boolean);
+  if (parts.length === 1) {
+    return parts[0][0].toUpperCase();
+  }
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
+
 
   const { patients, deletePatient } = usePatients();
   const navigate = useNavigate();
@@ -536,7 +537,9 @@ function handleSaveData() {
 
               <div className="field">
                 <label>Título</label>
-                <input type="text" value={evoTitle} onChange={(e) => setEvoTitle(e.target.value)} />
+                <input type="text"
+                placeholder="Título" 
+                value={evoTitle} onChange={(e) => setEvoTitle(e.target.value)} />
               </div>
 
               <div className="field">

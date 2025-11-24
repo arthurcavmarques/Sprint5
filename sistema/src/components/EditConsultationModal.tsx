@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { usePatients } from "./PatientContext";
-import "./Modal.css";
-import "../pages/PatientDetails.css"
+import "../styles/Modal.css";
 
 interface Ev {
   id: string;
@@ -12,24 +10,27 @@ interface Ev {
 
 interface Props {
   visible: boolean;
-  event?: Ev | null;
+  event: Ev | null;
   onClose: () => void;
   onSave: (ev: Ev) => void;
   onDelete: (id: string) => void;
 }
 
-const EditConsultationModal = ({ visible, event, onSave, onDelete, onClose }: Props) => {
-  const { patients } = usePatients();
+const EditConsultationModal = ({
+  visible,
+  event,
+  onClose,
+  onSave,
+  onDelete
+}: Props) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
-  const [patientId, setPatientId] = useState("");
   const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     if (event) {
       setTitle(event.title);
       setDate(event.date);
-      setPatientId(event.patientId ?? "");
     }
   }, [event]);
 
@@ -41,17 +42,6 @@ const EditConsultationModal = ({ visible, event, onSave, onDelete, onClose }: Pr
         <div className="modal">
           <h3>Editar consulta</h3>
 
-          <div style={{ display: "grid", gap: 8 }}>
-          <label>
-            Paciente
-            <select value={patientId} onChange={(e) => setPatientId(e.target.value)}>
-              <option value="">Selecione</option>
-              {patients.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-          </label>
-
           <label>
             Título
             <input value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -59,13 +49,26 @@ const EditConsultationModal = ({ visible, event, onSave, onDelete, onClose }: Pr
 
           <label>
             Data
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
           </label>
 
-            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-              <button className="danger" onClick={() => setConfirming(true)}>Excluir</button>
-              <button className="primary" type="button" onClick={() => { onSave({ id: event!.id, title, date, patientId }); if (onClose) onClose(); }}>Salvar</button>
-            </div>
+          <div className="actions">
+            <button className="danger" onClick={() => setConfirming(true)}>
+              Excluir
+            </button>
+            <button
+              className="primary"
+              onClick={() => {
+                onSave({ ...event, title, date });
+                onClose();
+              }}
+            >
+              Salvar
+            </button>
           </div>
         </div>
       </div>
@@ -73,11 +76,23 @@ const EditConsultationModal = ({ visible, event, onSave, onDelete, onClose }: Pr
       {confirming && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <h3>Tem certeza que deseja excluir esta consulta?</h3>
-            <p className="warning-text">Esta ação é irreversível.</p>
-            <div className="actions" style={{ marginTop: 12 }}>
-              <button className="danger" onClick={() => setConfirming(false)}>Cancelar</button>
-              <button className="primary" onClick={() => { onDelete(event!.id); setConfirming(false); if (onClose) onClose(); }}>Confirmar
+            <h3>Confirmar exclusão?</h3>
+            <p className="warning-text">Essa ação é irreversível.</p>
+
+            <div className="actions">
+              <button className="danger" onClick={() => setConfirming(false)}>
+                Cancelar
+              </button>
+
+              <button
+                className="primary"
+                onClick={() => {
+                  onDelete(event.id);
+                  setConfirming(false);
+                  onClose();
+                }}
+              >
+                Confirmar
               </button>
             </div>
           </div>

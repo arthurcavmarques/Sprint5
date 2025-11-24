@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { usePatients } from "../components/PatientContext";
-import "./Home.css";
+import "../styles/Home.css";
 
 const HomePage = () => {
   const { patients } = usePatients();
