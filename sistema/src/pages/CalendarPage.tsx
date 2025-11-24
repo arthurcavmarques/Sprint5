@@ -4,6 +4,11 @@ import CreateConsultationModal from "../components/CreateConsultationModal";
 import EditConsultationModal from "../components/EditConsultationModal";
 import { usePatients } from "../components/PatientContext";
 
+// ⚠️ Se você está usando um cliente HTTP customizado (como 'api'), importe-o aqui.
+// Caso contrário, usaremos apenas o 'fetch' nativo.
+// import api from '../services/api'; 
+
+
 const CalendarPage = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [createOpen, setCreateOpen] = useState(false);
@@ -14,10 +19,10 @@ const CalendarPage = () => {
   const { patients } = usePatients();
 
   // ---------------------------------
-  // CARREGAR CONSULTAS + ANIVERSÁRIOS
+  // 🆕 FUNÇÃO PARA CARREGAR CONSULTAS (EXTRAÍDA DO useEffect)
   // ---------------------------------
-  useEffect(() => {
-    fetch("/api/consultations")
+  const fetchAllEvents = () => {
+    fetch("/api/consultations") // <-- Usando a URL original do seu código para GET
       .then((res) => res.json())
       .then((data) => {
         const formattedConsultations = data.map((c: any) => ({
@@ -29,27 +34,34 @@ const CalendarPage = () => {
 
         const year = new Date().getFullYear();
 
-       const birthdayEvents = patients
-  .filter((p: any) => p.birthdate)
-  .map((p: any) => ({
-    id: `bday-${p.id}`,
-    title: `🎂 Aniversário de ${p.name}`,
-    date: `${year}-${p.birthdate.substring(5)}`,
-    patientId: p.id,
-    isBirthday: true,
-
-    // COR ESPECIAL DO ANIVERSÁRIO
-    backgroundColor: "#ff9f43",
-    borderColor: "#ff9f43",
-    textColor: "#000",
-  }));
+        const birthdayEvents = patients
+          .filter((p: any) => p.birthdate)
+          .map((p: any) => ({
+            id: `bday-${p.id}`,
+            title: `🎂 Aniversário de ${p.name}`,
+            date: `${year}-${p.birthdate.substring(5)}`,
+            patientId: p.id,
+            isBirthday: true,
+            backgroundColor: "#ff9f43",
+            borderColor: "#ff9f43",
+            textColor: "#000",
+          }));
 
         setEvents([...formattedConsultations, ...birthdayEvents]);
       })
       .catch(() => {
         setEvents([]);
       });
+  };
+
+  // ---------------------------------
+  // CARREGAR CONSULTAS + ANIVERSÁRIOS
+  // ---------------------------------
+  useEffect(() => {
+    // 💡 Agora apenas chama a função auxiliar
+    fetchAllEvents(); 
   }, [patients]);
+
 
   const handleDateClick = (info: any) => {
     setSelectedDate(info.dateStr);
@@ -72,23 +84,44 @@ const CalendarPage = () => {
     setEditOpen(true);
   };
 
-  const handleCreateSave = (payload: any) => {
-    const id = String(Date.now()).slice(-6);
-
-    const patientName =
-      patients.find((p: any) => p.id === payload.patientId)?.name ??
-      payload.title;
-
-    const newEv = {
-      id,
-      title: payload.title || patientName,
-      date: payload.date,
-      patientId: payload.patientId,
+  // ---------------------------------
+  // 🛠️ FUNÇÃO CORRIGIDA PARA SALVAR NO BACKEND
+  // ---------------------------------
+  const handleCreateSave = async (payload: any) => { // 🚨 Tornada assíncrona
+    // Prepara o objeto para o backend, usando os nomes de campos que o NestJS espera
+    const backendPayload = {
+      title: payload.title,
+      dataEvento: payload.date,       // Assumindo que o backend espera 'data'
+      pacienteId: payload.patientId, // Assumindo que o backend espera 'pacienteId'
     };
+    
+    try {
+      // 1. CHAMA O BACKEND (POST) USANDO FETCH
+      const response = await fetch('/consulta', { // Endpoint de criação do NestJS
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(backendPayload),
+      });
 
-    setEvents((prev) => [...prev, newEv]);
+      if (!response.ok) {
+        throw new Error(`Falha no servidor. Status: ${response.status}`);
+      }
+
+      // 2. Se o POST foi OK, recarrega a lista do backend
+      fetchAllEvents();
+      
+    } catch (error) {
+      console.error("Erro ao salvar agendamento:", error);
+      alert("Erro ao salvar agendamento no servidor. Verifique o console e o backend.");
+      return; // 🛑 Interrompe e não fecha o modal
+    }
+    
+    // 3. Fecha o modal apenas se tudo deu certo
     setCreateOpen(false);
   };
+  // ---------------------------------
 
   const handleEditSave = (payload: any) => {
     setEvents((prev) =>
