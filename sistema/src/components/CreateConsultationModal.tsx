@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { usePatients } from "./PatientContext";
-import "./Modal.css";
+import "../styles/Modal.css";
 
 interface Props {
   visible: boolean;

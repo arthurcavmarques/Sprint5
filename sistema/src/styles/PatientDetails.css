@@ -85,6 +85,10 @@
   border: 1px solid #eee;
 }
 
+body.dark .barra {
+  border: 1px solid #999;
+}
+
 .section-title {
   margin: 25px 0 15px 0;
   font-size: 18px;
@@ -183,7 +187,7 @@
   justify-content: center;
 }
 
-.cancel-btn {
+.cancel-btn, body.dark .cancel-btn {
   background-color: #d9534f;
   color: rgb(22, 69, 79);
   padding: 10px 18px;
@@ -192,7 +196,7 @@
   cursor: pointer;
 }
 
-.cancel-btn:hover {
+.cancel-btn:hover, body.dark .cancel-btn:hover {
   background-color: #ff6b6b;
 }
 
@@ -241,8 +245,9 @@
 }
 
 .close-btn {
-  background: none;
+  background: transparent;
   border: none;
+  border-radius: 6px;
   font-size: 20px;
   cursor: pointer;
 }
@@ -296,8 +301,8 @@
   opacity: 0.75;
 }
 
-.evolution-card {
-  border: 1px solid rgb(22, 69, 79);
+.evo-card {
+  border: 1px solid #dadada;
   background: white;
   width: 50%;
   padding: 12px;
@@ -305,17 +310,17 @@
   border-radius: 8px;
 }
 
-.evolution-card h4 {
+.evo-card h4 {
   margin: 0;
   font-weight: 600;
 }
 
-.evolution-card p {
+.evo-card p {
   margin: 4px 0;
   opacity: 0.75;
 }
 
-.evolution-modal-box {
+.evo-modal-box {
   width: 480px;
   background: rgb(22, 69, 79);
   border-radius: 10px;
@@ -392,7 +397,7 @@ body.dark .details-container {
 
 body.dark .details-header h2,
 body.dark .details-tabs p {
-  color: rgb(22, 69, 79);
+  color: white;
 }
 
 body.dark .details-avatar {
@@ -478,12 +483,12 @@ body.dark .evolution-modal-box {
 }
 
 body.dark .field label {
-  color: rgb(22, 69, 79);
+  color:white;
 }
 
 body.dark .event-modal-header,
 body.dark .evolution-modal-header {
-  color: rgb(22, 69, 79);
+  color: white;
 }
 
 body.dark .edit-icon {

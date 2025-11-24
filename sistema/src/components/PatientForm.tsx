@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePatients } from "../components/PatientContext";
-import "./Form.css";
+import "../styles/Form.css";
 
 const PatientForm = () => {
   const navigate = useNavigate();
@@ -54,6 +54,7 @@ const [formData, setFormData] = useState({
               type="text"
               name="name"
               required
+              placeholder="Nome Completo"
               value={formData.name}
               onChange={handleChange}
             />
@@ -88,6 +89,7 @@ const [formData, setFormData] = useState({
               type="email"
               name="email"
               required
+              placeholder="seuemail@email.com"
               value={formData.email}
               onChange={handleChange}
             />

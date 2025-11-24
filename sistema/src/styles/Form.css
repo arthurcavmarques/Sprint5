@@ -9,19 +9,30 @@
 }
 
 .modal {
-  background: #ffffff;
+  background: var(--bg-secondary);
   width: 520px;
   border-radius: 14px;
   padding: 24px 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border);
+  color: var(--text);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
-.modal-header, .modal-header h2 {
+body.dark .modal {
+  box-shadow: 0 4px 22px rgba(0,0,0,0.6);
+}
+
+.modal-header, 
+.modal-header h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 18px;
-  color: rgba(22, 69, 79);
+  color: rgb(22, 69, 79);
+}
+
+body.dark .modal-header,body.dark .modal-header h2 {
+  color: var(--text);
 }
 
 .close-btn {
@@ -29,20 +40,26 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: rgba(22, 69, 79);
+  color: rgb(22, 69, 79);
   transition: 0.2s;
+  border-radius: 6px;
 }
 
 .close-btn:hover {
   background-color: #72fcec;
+  color: rgb(22, 69, 79);
 }
 
 .form label {
   font-size: 14px;
-  color: rgba(22, 69, 79);
+  color: rgb(22, 69, 79);
   display: flex;
   flex-direction: column;
   margin-bottom: 14px;
+}
+
+body.dark .form label {
+  color: var(--text);
 }
 
 .form input,
@@ -50,15 +67,12 @@
   margin-top: 4px;
   padding: 10px 12px;
   font-size: 15px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
+  background: var(--bg);
+  color: var(--text);
   transition: 0.2s;
-}
-
-.form input:focus,
-.form textarea:focus {
-  border-color: rgba(22, 69, 79);
 }
 
 .submit-btn {
@@ -66,7 +80,7 @@
   width: 150px;
   padding: 10px;
   background: #3ca493;
-  color: rgba(22, 69, 79);
+  color: rgb(22, 69, 79);
   font-size: 16px;
   border: none;
   border-radius: 8px;
@@ -75,6 +89,12 @@
   transition: 0.2s;
 }
 
+body.dark .submit-btn {
+  background: #3ca493;
+  color: rgb(22, 69, 79);
+}
+
 .submit-btn:hover {
   background: #72fcec;
+  color: rgb(22, 69, 79);
 }

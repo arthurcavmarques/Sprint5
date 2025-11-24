@@ -4,7 +4,6 @@
   background: white;
   padding: 20px 0;
   border-right: 1px solid #eee;
-
   position: fixed;
   left: 0;
   top: 0;
@@ -25,6 +24,7 @@
 .icon-btn[data-label], .icon-btn-exit[data-label] {
   position: relative;
 }
+
 .icon-btn[data-label]:hover::after, .icon-btn-exit[data-label]:hover::after {
   content: attr(data-label);
   position: absolute;
@@ -132,7 +132,7 @@
 
 .sidebar.dark .icon-btn:hover,
 .sidebar.dark .icon-btn:hover img {
-  background: #444 !important;
+  background: #72fcec !important;
 }
 
 .sidebar.dark .icon-btn-exit,

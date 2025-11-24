@@ -14,10 +14,15 @@
   color: rgba(22, 69, 79);
 }
 
+body.dark .modal h3, body.dark .modal label {
+  color: var(--text);
+}
+
 .modal label {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  color: rgba(22, 69, 79);
   margin-bottom: 8px;
   font-weight: 500;
 }
@@ -28,6 +33,11 @@
   border-radius: 8px;
   border: 1px solid #e6e6e6;
   background: #fbfbfb;
+}
+
+body.dark .modal select {
+  background: #2a2a2a;
+  color: var(--text);
 }
 
 .modal button {
@@ -47,16 +57,19 @@
   color: rgba(22, 69, 79);
 }
 
-.modal .danger {
+body.dark .danger {
   background: #d9534f;
   color:rgba(22, 69, 79);
 }
 
-.modal .primary:hover {
+
+
+body.dark .primary:hover {
   background-color: #72fcec;
+  color: rgba(22, 69, 79);
 }
 
-.modal .danger:hover {
+body.dark .danger:hover, .danger:hover {
   background-color: #ff6b6b;
 }
 
@@ -72,7 +85,7 @@
   background: #ff6b6b;
 }
 
-.primary {
+.primary, body.dark .primary {
   background: #3ca493;
   color: rgba(22, 69, 79);
   border: none;
@@ -84,9 +97,10 @@
   background: #72fcec;
 }
 
-.modal .actions {
+.actions {
   display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  margin-top: 10px;
+  gap: 10px !important;
+  justify-content: center;
+  margin-top: 20px;
 }
+

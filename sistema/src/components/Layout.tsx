@@ -1,12 +1,11 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import "./Layout.css";
+import "../styles/Layout.css";
 
 export default function Layout() {
   return (
-    <div className={`layout light`}> 
+    <div className={`layout`}> 
       <NavBar />
-
       <div className="main-area">
         <header className="topbar">
           <h2>Dra. Natália Rossoni</h2>

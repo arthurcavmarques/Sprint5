@@ -5,7 +5,7 @@ import Layout from "./components/Layout";
 import PatientDetailsPage from "./pages/PatientDetailsPage";
 import PatientForm from "./components/PatientForm";
 import { PatientProvider } from "./components/PatientContext";
-import "./index.css"
+import "../src/styles/index.css"
 
 export default function App() {
   return (
