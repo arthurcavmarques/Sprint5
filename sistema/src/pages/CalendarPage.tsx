@@ -72,35 +72,67 @@ const CalendarPage = () => {
     setEditOpen(true);
   };
 
-  const handleCreateSave = (payload: any) => {
-    const id = String(Date.now()).slice(-6);
-
-    const patientName =
-      patients.find((p: any) => p.id === payload.patientId)?.name ??
-      payload.title;
-
-    const newEv = {
-      id,
-      title: payload.title || patientName,
-      date: payload.date,
+  const handleCreateSave = async (payload: any) => {
+    const body = {
       patientId: payload.patientId,
+      date: payload.date,
+      title: payload.title,
     };
 
-    setEvents((prev) => [...prev, newEv]);
+    try {
+      const res = await fetch("/api/consultations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const saved = await res.json();
+
+      const newEv = {
+        id: saved.id,
+        title: saved.patientName || body.title,
+        date: saved.date,
+        patientId: saved.patientId,
+      };
+
+      setEvents((prev) => [...prev, newEv]);
+    } catch (err) {
+      console.error("Erro ao salvar consulta:", err);
+    }
+
     setCreateOpen(false);
   };
 
-  const handleEditSave = (payload: any) => {
-    setEvents((prev) =>
-      prev.map((e) => (e.id === payload.id ? { ...e, ...payload } : e))
-    );
+  const handleEditSave = async (payload: any) => {
+    try {
+      await fetch(`/api/consultations/${payload.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      setEvents((prev) =>
+        prev.map((e) => (e.id === payload.id ? { ...e, ...payload } : e))
+      );
+    } catch (err) {
+      console.error("Erro ao atualizar consulta:", err);
+    }
 
     setEditOpen(false);
     setSelectedEvent(null);
   };
 
-  const handleDelete = (id: string) => {
-    setEvents((prev) => prev.filter((e) => e.id !== id));
+  const handleDelete = async (id: string) => {
+    try {
+      await fetch(`/api/consultations/${id}`, {
+        method: "DELETE",
+      });
+
+      setEvents((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      console.error("Erro ao deletar consulta:", err);
+    }
+
     setEditOpen(false);
     setSelectedEvent(null);
   };

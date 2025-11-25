@@ -1,609 +1,229 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePatients } from "../components/PatientContext";
 import "../styles/PatientDetails.css";
 
+const API = "http://localhost:3001/patients";
+
 const PatientDetailsPage: React.FC = () => {
   const { id } = useParams();
-  if (!id) {
-    return (
-      <div className="details-empty">
-        <p style={{ opacity: 0.7 }}>Selecione um paciente para ver os detalhes.</p>
-      </div>
-    );
-  }
-
-  const computeInitials = (fullName: string) => {
-  const parts = fullName.trim().split(" ").filter(Boolean);
-  if (parts.length === 1) {
-    return parts[0][0].toUpperCase();
-  }
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-};
-
-
-  const { patients, deletePatient } = usePatients();
   const navigate = useNavigate();
 
-  const found = patients.find((p) => p.id === id);
+  const {
+    deletePatient,
+    updatePatient,
+    addEvent,
+    addEvolution,
+  } = usePatients();
 
-  if (!found) {
-    return (
-      <div className="details-empty">
-        <p style={{ opacity: 0.7 }}>Paciente não encontrado.</p>
-      </div>
-    );
-  }
+  const [patient, setPatient] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const patientName = found.name;
-  const patient = {
-    id: found.id,
-    initials: computeInitials(patientName),
-    name: patientName,
-    record: String(found.id),
-    birth: found.birthdate || "",
-    phone: found.phone || "",
-    cpf: found.cpf || "",
-    email: found.email || "",
-    firstConsultation: found.firstConsultation || "",
-    events: found.events || [],
-    evolutions: found.evolutions || []
-  };
+  const [newEvent, setNewEvent] = useState("");
+  const [newEvolution, setNewEvolution] = useState("");
 
-  const [activeTab, setActiveTab] = useState<"dados" | "agenda" | "evolucoes">(
-    "dados"
-  );
+  // Busca do backend
+  useEffect(() => {
+    const fetchPatient = async () => {
+      try {
+        const res = await fetch(`${API}/${id}`);
+        if (!res.ok) throw new Error("Erro ao carregar paciente");
+        const data = await res.json();
+        setPatient(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const [events, setEvents] = useState<
-    { date: string; name: string; start: string; end: string }[]
-  >([]);
+    fetchPatient();
+  }, [id]);
 
-  const upcoming = events.filter(e => new Date(e.date) >= new Date());
-  const previous = events.filter(e => new Date(e.date) < new Date());
+  if (loading) return <p>Carregando...</p>;
+  if (!patient) return <p>Paciente não encontrado.</p>;
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEventModal, setShowEventModal] = useState(false);
+  // Atualizar informações básicas do paciente
+  const handleUpdate = async () => {
+    const body = {
+      name: patient.name,
+      phone: patient.phone,
+      email: patient.email,
+      birthdate: patient.birthdate,
+      cpf: patient.cpf,
+    };
 
-  const [eventDate, setEventDate] = useState("");
-  const [eventName, setEventName] = useState("");
-  const [eventStart, setEventStart] = useState("");
-  const [eventEnd, setEventEnd] = useState("");
+    try {
+      const res = await fetch(`${API}/${patient.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-  const [editingEvent, setEditingEvent] = useState<number | null>(null);
-  const { updatePatient } = usePatients();
+      if (!res.ok) throw new Error("Erro ao atualizar");
 
-const [editingData, setEditingData] = useState(false);
+      const updated = await res.json();
 
-const [editData, setEditData] = useState({
-  id: patient.id!,
-  name: patient.name || "",
-  birthdate: patient.birth || "",
-  phone: patient.phone || "",
-  email: patient.email || "",
-  cpf: patient.cpf || "",
-  firstConsultation: patient.firstConsultation || "",
-  events: patient.events ?? [],
-  evolutions: patient.evolutions ?? []
-});
+      setPatient(updated);
+      updatePatient(patient.id, updated);
 
-function handleSaveData() {
-  updatePatient(editData);
-  setEditingData(false);
-}
-
-
-  const handleDeletePatient = () => {
-    if (patient.id) {
-      deletePatient(patient.id);
+      alert("Dados atualizados!");
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao atualizar paciente.");
     }
-
-    setShowDeleteModal(false);
-    navigate("/");
   };
 
-  const startEditEvent = (index: number) => {
-    const ev = events[index];
+  const handleAddEvent = async () => {
+    if (!newEvent.trim()) return;
 
-    setEditingEvent(index);
-    setEventDate(ev.date);
-    setEventName(ev.name);
-    setEventStart(ev.start);
-    setEventEnd(ev.end);
+    try {
+      const res = await fetch(`${API}/${patient.id}/events`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: newEvent }),
+      });
 
-    setShowEventModal(true);
+      if (!res.ok) throw new Error("Erro ao adicionar evento");
+
+      const saved = await res.json();
+      addEvent(patient.id, saved);
+
+      setPatient((prev: any) => ({
+        ...prev,
+        events: [...prev.events, saved],
+      }));
+
+      setNewEvent("");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const saveEvent = () => {
-    if (editingEvent === null) return;
+  const handleAddEvolution = async () => {
+    if (!newEvolution.trim()) return;
 
-    const updated = [...events];
-    updated[editingEvent] = {
-      date: eventDate,
-      name: eventName,
-      start: eventStart,
-      end: eventEnd
-    };
+    try {
+      const res = await fetch(`${API}/${patient.id}/evolutions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: newEvolution }),
+      });
 
-    setEvents(updated);
+      if (!res.ok) throw new Error("Erro ao adicionar evolução");
 
-    setEditingEvent(null);
-    setShowEventModal(false);
+      const saved = await res.json();
+      addEvolution(patient.id, saved);
 
-    setEventDate("");
-    setEventName("");
-    setEventStart("");
-    setEventEnd("");
+      setPatient((prev: any) => ({
+        ...prev,
+        evolutions: [...prev.evolutions, saved],
+      }));
 
-    setActiveTab("agenda");
+      setNewEvolution("");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const [evolutions, setEvolutions] = useState<
-    { title: string; date: string; time: string; description: string }[]
-  >([]);
+  const handleDelete = async () => {
+    const ok = confirm("Tem certeza que deseja excluir?");
+    if (!ok) return;
 
-  const [showEvolutionModal, setShowEvolutionModal] = useState(false);
+    try {
+      const res = await fetch(`${API}/${patient.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Erro ao excluir");
 
-  const [evoTitle, setEvoTitle] = useState("");
-  const [evoDate, setEvoDate] = useState("");
-  const [evoTime, setEvoTime] = useState("");
-  const [evoDesc, setEvoDesc] = useState("");
-
-  const [editingEvolution, setEditingEvolution] = useState<number | null>(null);
-
-  const startEditEvolution = (index: number) => {
-    const ev = evolutions[index];
-
-    setEditingEvolution(index);
-    setEvoTitle(ev.title);
-    setEvoDate(ev.date);
-    setEvoTime(ev.time);
-    setEvoDesc(ev.description);
-
-    setShowEvolutionModal(true);
-  };
-
-  const saveEvolution = () => {
-    if (editingEvolution === null) return;
-
-    const updated = [...evolutions];
-    updated[editingEvolution] = {
-      title: evoTitle,
-      date: evoDate,
-      time: evoTime,
-      description: evoDesc
-    };
-
-    setEvolutions(updated);
-
-    setEditingEvolution(null);
-    setShowEvolutionModal(false);
-
-    setEvoTitle("");
-    setEvoDate("");
-    setEvoTime("");
-    setEvoDesc("");
-
-    setActiveTab("evolucoes");
+      deletePatient(patient.id);
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao excluir paciente.");
+    }
   };
 
   return (
-    <div className="details-container">
-      <div className="details-header">
-        <div className="details-left">
-          <div className="details-avatar">{patient.initials}</div>
-          <h2>
-            {patient.name} | {patient.record}
-          </h2>
-        </div>
+    <div className="patient-details-container">
+      <h1>Detalhes do Paciente</h1>
 
-        <div className="details-actions">
-          <button
-            className="btn-secondary"
-            onClick={() => {
-              setEditingEvent(null);
-              setShowEventModal(true);
-            }}
-          >
-            Criar Evento
-          </button>
+      <div className="patient-box">
+        <label>Nome:</label>
+        <input
+          value={patient.name}
+          onChange={(e) => setPatient({ ...patient, name: e.target.value })}
+        />
 
-          <button
-            className="btn-primary"
-            onClick={() => {
-              setEditingEvolution(null);
-              setShowEvolutionModal(true);
-            }}
-          >
-            Criar Evolução
-          </button>
-        </div>
+        <label>Telefone:</label>
+        <input
+          value={patient.phone}
+          onChange={(e) => setPatient({ ...patient, phone: e.target.value })}
+        />
+
+        <label>E-mail:</label>
+        <input
+          value={patient.email}
+          onChange={(e) => setPatient({ ...patient, email: e.target.value })}
+        />
+
+        <label>Data de nascimento:</label>
+        <input
+          type="date"
+          value={patient.birthdate}
+          onChange={(e) => setPatient({ ...patient, birthdate: e.target.value })}
+        />
+
+        <label>CPF:</label>
+        <input
+          value={patient.cpf}
+          onChange={(e) => setPatient({ ...patient, cpf: e.target.value })}
+        />
+
+        <button className="save-btn" onClick={handleUpdate}>
+          Salvar alterações
+        </button>
       </div>
 
-      <div className="details-tabs">
-        <p
-          className={activeTab === "dados" ? "active-tab" : ""}
-          onClick={() => setActiveTab("dados")}
-        >
-          Dados
-        </p>
+      <hr />
 
-        <p
-          className={activeTab === "agenda" ? "active-tab" : ""}
-          onClick={() => setActiveTab("agenda")}
-        >
-          Agenda
-        </p>
-
-        <p
-          className={activeTab === "evolucoes" ? "active-tab" : ""}
-          onClick={() => setActiveTab("evolucoes")}
-        >
-          Evoluções
-        </p>
-      </div>
-
-      <hr className="barra" />
-
-      {activeTab === "dados" && (
-        <>
-          <h3 className="section-title">Informações do Paciente</h3>
-
-          <button
-            className="btn-primary-edit"
-            style={{ marginBottom: 15 }}
-            onClick={() => setEditingData(!editingData)}
-          >
-            {editingData ? "Cancelar Edição" : "Editar Dados"}
-          </button>
-
-          <div className="details-grid">
-            <div className="info-box">
-              <p><b>Nome</b></p>
-              <input
-                disabled={!editingData}
-                value={editData.name}
-                onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-              />
-            </div>
-
-            <div className="info-box">
-              <p><b>Prontuário</b></p>
-              <input disabled value={patient.record} />
-            </div>
-
-            <div className="info-box">
-              <p><b>Data de Nascimento</b></p>
-              <input
-                type="date"
-                disabled={!editingData}
-                value={editData.birthdate}
-                onChange={(e) =>
-                  setEditData({ ...editData, birthdate: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="info-box">
-              <p><b>Telefone</b></p>
-              <input
-                disabled={!editingData}
-                value={editData.phone}
-                onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
-              />
-            </div>
-
-            <div className="info-box">
-              <p><b>Email</b></p>
-              <input
-                disabled={!editingData}
-                value={editData.email}
-                onChange={(e) => setEditData({ ...editData, email: e.target.value })}
-              />
-            </div>
-
-            <div className="info-box">
-              <p><b>CPF</b></p>
-              <input
-                disabled={!editingData}
-                value={editData.cpf}
-                onChange={(e) => setEditData({ ...editData, cpf: e.target.value })}
-              />
-            </div>
-
-            <div className="info-box">
-              <p><b>Primeira Consulta</b></p>
-              <input
-                type="date"
-                disabled={!editingData}
-                value={editData.firstConsultation}
-                onChange={(e) =>
-                  setEditData({ ...editData, firstConsultation: e.target.value })
-                }
-              />
-            </div>
+      {/* EVENTOS */}
+      <h2>Eventos</h2>
+      <div className="event-box">
+        {patient.events?.map((ev: any) => (
+          <div key={ev.id} className="event-item">
+            <p>{ev.text}</p>
           </div>
+        ))}
 
-          {editingData && (
-            <button
-              className="btn-primary-edit"
-              style={{ marginTop: 20 }}
-              onClick={handleSaveData}
-            >
-              Salvar Alterações
-            </button>
-          )}
-        </>
-      )}
+        <textarea
+          value={newEvent}
+          placeholder="Adicionar evento..."
+          onChange={(e) => setNewEvent(e.target.value)}
+        />
+        <button onClick={handleAddEvent}>Adicionar Evento</button>
+      </div>
 
+      <hr />
 
-      {activeTab === "agenda" && (
-        <div className="agenda-container">
+      {/* EVOLUÇÕES */}
+      <h2>Evoluções</h2>
+      <div className="evolution-box">
+        {patient.evolutions?.map((ev: any) => (
+          <div key={ev.id} className="evolution-item">
+            <p>{ev.text}</p>
+          </div>
+        ))}
 
-          <h3 className="agenda-title">Próximos Atendimentos</h3>
-          {upcoming.length === 0 ? (
-            <p className="agenda-empty">Nenhuma consulta agendada</p>
-          ) : (
-            upcoming.map((ev, i) => (
-              <div key={i} className="agenda-card">
-                <h4>{ev.name}</h4>
-                <p>{ev.date}</p>
-                <p>{ev.start} - {ev.end}</p>
+        <textarea
+          value={newEvolution}
+          placeholder="Adicionar evolução..."
+          onChange={(e) => setNewEvolution(e.target.value)}
+        />
+        <button onClick={handleAddEvolution}>Adicionar Evolução</button>
+      </div>
 
-                <button
-                  className="btn-secondary"
-                  onClick={() => startEditEvent(i)}
-                >
-                  Editar
-                </button>
-              </div>
-            ))
-          )}
-
-          <hr className="barra" />
-
-          <h3 className="agenda-title">Atendimentos Anteriores</h3>
-          {previous.length === 0 ? (
-            <p className="agenda-empty">Nenhuma consulta realizada</p>
-          ) : (
-            previous.map((ev, i) => (
-              <div key={i} className="agenda-card">
-                <h4>{ev.name}</h4>
-                <p>{ev.date}</p>
-                <p>{ev.start} - {ev.end}</p>
-
-                <button
-                  className="btn-secondary"
-                  onClick={() => startEditEvent(i)}
-                >
-                  Editar
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {activeTab === "evolucoes" && (
-        <div className="evo-container">
-          {evolutions.length === 0 ? (
-            <p style={{ marginTop: 20, opacity: 0.6 }}>
-              Nenhuma evolução registrada
-            </p>
-          ) : (
-            evolutions.map((ev, i) => (
-              <div key={i} className="evo-card">
-                <h4>{ev.title}</h4>
-                <p><b>{ev.date}</b> às {ev.time}</p>
-                <p>{ev.description}</p>
-
-                <button
-                  className="btn-secondary"
-                  onClick={() => startEditEvolution(i)}
-                >
-                  Editar
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      <button
-        className="delete-btn"
-        onClick={() => setShowDeleteModal(true)}
-      >
+      <button className="delete-btn" onClick={handleDelete}>
         Excluir Paciente
       </button>
-
-      {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            <h3>Deseja mesmo deletar este Paciente?</h3>
-            <p className="warning-text">Esta ação é irreversível.</p>
-
-            <div className="modal-actions">
-              <button
-                className="cancel-btn"
-                onClick={() => setShowDeleteModal(false)}
-              >
-                Cancelar
-              </button>
-
-              <button
-                className="confirm-btn"
-                onClick={handleDeletePatient}
-              >
-                Confirmar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showEventModal && (
-        <div className="modal-overlay">
-          <div className="event-modal-box">
-
-            <div className="event-modal-header">
-              <h2>{editingEvent !== null ? "Editar Evento" : "Novo Evento"}</h2>
-              <button className="close-btn" onClick={() => setShowEventModal(false)}>
-                ✕
-              </button>
-            </div>
-
-            <div className="event-modal-body">
-
-              <div className="field">
-                <label>Paciente</label>
-                <select defaultValue={patient.name}>
-                  <option>{patient.name}</option>
-                </select>
-              </div>
-
-              <div className="field">
-                <label>Data</label>
-                <input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
-              </div>
-
-              <div className="field">
-                <label>Nome do evento</label>
-                <input type="text" placeholder="Nome do evento" value={eventName} onChange={(e) => setEventName(e.target.value)} />
-              </div>
-
-              <div className="time-row">
-                <div className="field">
-                  <label>Hora de início</label>
-                  <input type="time" value={eventStart} onChange={(e) => setEventStart(e.target.value)} />
-                </div>
-
-                <div className="field">
-                  <label>Hora de término</label>
-                  <input type="time" value={eventEnd} onChange={(e) => setEventEnd(e.target.value)} />
-                </div>
-              </div>
-            </div>
-
-            <div className="event-modal-footer">
-              <button className="btn-primary" onClick={() => {
-
-                if (editingEvent !== null) {
-                  saveEvent();
-                  return;
-                }
-
-                if (!eventDate || !eventName) {
-                  alert("Preencha a data e o nome do evento.");
-                  return;
-                }
-
-                const newEvent = {
-                  date: eventDate,
-                  name: eventName,
-                  start: eventStart,
-                  end: eventEnd
-                };
-
-                setEvents((prev) => [...prev, newEvent]);
-                setShowEventModal(false);
-
-                setEventDate("");
-                setEventName("");
-                setEventStart("");
-                setEventEnd("");
-
-                setActiveTab("agenda");
-              }}
-            >
-              {editingEvent !== null ? "Salvar Alterações" : "Criar Evento"}
-            </button>
-
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showEvolutionModal && (
-        <div className="modal-overlay">
-          <div className="event-modal-box" style={{ maxWidth: "900px" }}>
-
-            <div className="event-modal-header">
-              <h2>{editingEvolution !== null ? "Editar Evolução" : "Nova Evolução"}</h2>
-              <button className="close-btn" onClick={() => setShowEvolutionModal(false)}>
-                ✕
-              </button>
-            </div>
-
-            <div className="event-modal-body">
-
-              <div className="field">
-                <label>Título</label>
-                <input type="text"
-                placeholder="Título" 
-                value={evoTitle} onChange={(e) => setEvoTitle(e.target.value)} />
-              </div>
-
-              <div className="field">
-                <label>Data</label>
-                <input type="date" value={evoDate} onChange={(e) => setEvoDate(e.target.value)} />
-              </div>
-
-              <div className="field">
-                <label>Hora</label>
-                <input type="time" value={evoTime} onChange={(e) => setEvoTime(e.target.value)} />
-              </div>
-
-              <div className="field">
-                <label>Descrição</label>
-                <textarea
-                  rows={6}
-                  placeholder="Descreva o que aconteceu"
-                  value={evoDesc}
-                  onChange={(e) => setEvoDesc(e.target.value)}
-                ></textarea>
-              </div>
-
-            </div>
-
-            <div className="event-modal-footer">
-              <button
-                className="btn-primary"
-                onClick={() => {
-                  if (editingEvolution !== null) {
-                    saveEvolution();
-                    return;
-                  }
-
-                  if (!evoTitle || !evoDate) {
-                    alert("Preencha título e data.");
-                    return;
-                  }
-
-                  const newEvolution = {
-                    title: evoTitle,
-                    date: evoDate,
-                    time: evoTime,
-                    description: evoDesc
-                  };
-
-                  setEvolutions(prev => [...prev, newEvolution]);
-
-                  setShowEvolutionModal(false);
-
-                  setEvoTitle("");
-                  setEvoDate("");
-                  setEvoTime("");
-                  setEvoDesc("");
-
-                  setActiveTab("evolucoes");
-                }}
-              >
-                {editingEvolution !== null ? "Salvar Alterações" : "Publicar"}
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
     </div>
   );
 };

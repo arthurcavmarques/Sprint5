@@ -1,42 +1,45 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePatients } from "../components/PatientContext";
 import "../styles/Form.css";
 
 const PatientForm = () => {
   const navigate = useNavigate();
-  const { addPatient } = usePatients();
 
-const [formData, setFormData] = useState({
-  name: "",
-  birthdate: "",
-  phone: "",
-  email: "",
-  cpf: "",
-  firstConsultation: "",   
-  events: [],
-  evolutions: [],
-  notes: "",
-});
+  const [formData, setFormData] = useState({
+    name: "",
+    birthdate: "",
+    phone: "",
+    email: "",
+    cpf: "",
+    notes: "",
+  });
 
-
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const newPatient = {
-      id: String(Date.now()).slice(-6),
-      ...formData,
-    };
+    try {
+      const response = await fetch("http://localhost:3000/paciente/criarPa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    addPatient(newPatient);
-    navigate("/");
+      if (!response.ok) {
+        console.error("Erro ao criar paciente");
+        return;
+      }
+
+      navigate("/");
+    } catch (err) {
+      console.error("Falha ao conectar com o servidor", err);
+    }
   }
 
   return (
