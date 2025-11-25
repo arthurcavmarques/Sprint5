@@ -19,12 +19,12 @@ export class ConsultaController {
     return consulta;
   }
   
-  @Get()
+  @Get('listarCo')
   findAll() {
     return this.consultaService.findAll();
   }
   
-  @Post()
+  @Post('criarCo')
   create(@Body() createConsultaDto: ConsultaDTO) {
     return this.consultaService.create(createConsultaDto);
   }

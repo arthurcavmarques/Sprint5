@@ -7,12 +7,12 @@ import { UpdateEvolucaoDTO } from './atualizar.evolucao';
 export class EvolucaoController {
   constructor(private readonly evolucaoService: EvolucaoService) {}
 
-  @Post('evolucao')
+  @Post('criarEv')
   async create(@Body() req: EvolucaoDTO) {
     return await this.evolucaoService.create(req)
   }
 
-  @Get('evolucao')
+  @Get('listarEv')
   async listAll() {
     return await this.evolucaoService.listAll()
   }
