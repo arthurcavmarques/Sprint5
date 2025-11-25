@@ -3,31 +3,31 @@ import { EvolucaoService } from './evolucao.service';
 import { EvolucaoDTO } from './evolucao';
 import { UpdateEvolucaoDTO } from './atualizar.evolucao';
 
-@Controller()
+@Controller('evolucao')
 export class EvolucaoController {
   constructor(private readonly evolucaoService: EvolucaoService) {}
 
-  @Post('criarEv')
+  @Post()
   async create(@Body() req: EvolucaoDTO) {
     return await this.evolucaoService.create(req)
   }
 
-  @Get('listarEv')
+  @Get()
   async listAll() {
     return await this.evolucaoService.listAll()
   }
 
-  @Get('evolucao/:id')
+  @Get(':id')
   async searchById(@Param('id', ParseIntPipe)  id : number) {
     return await this.evolucaoService.searchById(id)
   }
 
-  @Patch('evolucao/:id')
+  @Patch(':id')
   async updateEvolucao(@Body() req : UpdateEvolucaoDTO, @Param('id', ParseIntPipe) id : number) {
       return await this.evolucaoService.updateEvolucao(req, id)
   }
 
-  @Delete('evolucao/:id')
+  @Delete(':id')
   async deleteEvolucao(@Param('id', ParseIntPipe) id : number) {
     return this.evolucaoService.deleteEvolucao(id)
   }

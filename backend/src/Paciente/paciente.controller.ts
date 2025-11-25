@@ -7,7 +7,7 @@ import { AtualizarPaciente } from './atualizar.paciente';
 export class PacienteController {
   constructor(private readonly pacienteService: PacienteService) {}
 
-  @Get('listarPa')
+  @Get()
   findAll() {
     return this.pacienteService.findAll();
   }
@@ -22,7 +22,7 @@ export class PacienteController {
     return this.pacienteService.searchByName(nomeCompleto);
   }
   
-  @Post('criarPa')
+  @Post()
   create(@Body() createPacienteDto: Paciente) {
     return this.pacienteService.create(createPacienteDto);
   }

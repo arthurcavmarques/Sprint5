@@ -25,8 +25,8 @@ export class ConsultaController {
   }
   
   @Post('criarCo')
-  create(@Body() createConsultaDto: ConsultaDTO) {
-    return this.consultaService.create(createConsultaDto);
+  async create(@Body() createConsultaDto: ConsultaDTO) {
+    return await this.consultaService.create(createConsultaDto);
   }
   @Put(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() updateConsultaDto: updateConsultaDto) {
